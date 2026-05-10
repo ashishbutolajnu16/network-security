@@ -68,14 +68,14 @@ class ModelTrainer:
                     "criterion": ['gini', 'entropy', 'log_loss']
                 },
                 "Gradient Boosting": {
-                    "learning_rate": [.1,.01,.05,.001],
+                    "learning_rate": [.1,.01,.001],
                     'subsample':[0.6,0.7,0.75,0.85,0.9],
-                    'n_estimators': [8,16,32,64,128,256]
+                    'n_estimators': [8,16,32,256]
                 },
                 "Logistic Regression": {},
                 "Adaboost": {
                     'learning_rate':[.1,.01,.001],
-                    'n_estimators': [8,16,32,64,128,256]
+                    'n_estimators': [8,16,64,128,256]
                 }
             }
             model_report:dict=evaluate_models(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,
@@ -98,6 +98,9 @@ class ModelTrainer:
 
             y_test_pred = best_model.predict(x_test)
             classification_test_metric = get_classification_score(y_true=y_test, y_pred=y_test_pred)
+
+            ## Track the experiment with MLFlow for test
+            # self.track_mlflow(best_model, classification_test_metric)
 
             preprocessor = load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)
 
