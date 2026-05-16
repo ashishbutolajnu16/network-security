@@ -1,6 +1,7 @@
 import os
 import sys
 
+import dagshub
 import mlflow
 from sklearn.ensemble import (
     AdaBoostClassifier,
@@ -29,6 +30,13 @@ from networksecurity.utils.ml_utils.metric.classification_metric import (
     get_classification_score,
 )
 from networksecurity.utils.ml_utils.model.estimator import NetworkModel
+
+dagshub.init(repo_owner='ashishbutolajnu16', repo_name='network-security', mlflow=True)
+
+# import mlflow
+# with mlflow.start_run():
+#   mlflow.log_param('parameter name', 'value')
+#   mlflow.log_metric('metric name', 1)
 
 
 class ModelTrainer:
@@ -109,6 +117,9 @@ class ModelTrainer:
 
             network_model = NetworkModel(preprocessor=preprocessor, model=best_model)
             save_object(self.model_trainer_config.trained_model_file_path, obj=network_model)
+
+            save_object("final_model/model.pkl", best_model)
+            
 
             ## Model trainer artifact
             model_trainer_artifact = ModelTrainerArtifact(trained_model_file_path=self.model_trainer_config.trained_model_file_path,
